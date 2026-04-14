@@ -1,0 +1,13 @@
+# Entorno virtual
+venv/
+
+# Resultados del scraper (datos personales, cambian cada ejecucion)
+empleos_*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Editor
+.vscode/
+.idea/
