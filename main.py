@@ -1,18 +1,30 @@
 import asyncio
 import sys
-from config import ROLES, UBICACION, MAX_PAGINAS
+from config import ROLES, UBICACION, MAX_PAGINAS, SCRAPERS_ACTIVOS
 from exporters import exportar_csv
 from scrapers.occ import OCCScraper
 from scrapers.computrabajo import ComputrabajoScraper
 from scrapers.indeed_mx import IndeedMXScraper
+from scrapers.probecarios import ProbecariosScraper
+from scrapers.remoteok import RemoteOKScraper
+from scrapers.weworkremotely import WeWorkRemotelyScraper
+from scrapers.getonbrd import GetOnBrdScraper
+from scrapers.wellfound import WellfoundScraper
+from scrapers.google_careers import GoogleCareersScraper
 from models import Job
 
 
-SCRAPERS = [
-    OCCScraper,
-    ComputrabajoScraper,
-    IndeedMXScraper,
-]
+SCRAPER_REGISTRY = {
+    "occ": OCCScraper,
+    "computrabajo": ComputrabajoScraper,
+    "indeed_mx": IndeedMXScraper,
+    "probecarios": ProbecariosScraper,
+    "remoteok": RemoteOKScraper,
+    "weworkremotely": WeWorkRemotelyScraper,
+    "getonbrd": GetOnBrdScraper,
+    "wellfound": WellfoundScraper,
+    "google_careers": GoogleCareersScraper,
+}
 
 
 async def correr_scraper(cls, roles, ubicacion, max_paginas) -> list[Job]:
@@ -27,12 +39,14 @@ async def correr_scraper(cls, roles, ubicacion, max_paginas) -> list[Job]:
 
 
 async def main():
-    print(f"Buscando empleos en: {UBICACION}")
-    print(f"Roles: {', '.join(ROLES)}\n")
+    activos = [n for n, on in SCRAPERS_ACTIVOS.items() if on]
+    print(f"Scrapers activos: {', '.join(activos)}")
+    print(f"Roles: {', '.join(ROLES[:5])}... ({len(ROLES)} total)\n")
 
     tareas = [
-        correr_scraper(cls, ROLES, UBICACION, MAX_PAGINAS)
-        for cls in SCRAPERS
+        correr_scraper(SCRAPER_REGISTRY[nombre], ROLES, UBICACION, MAX_PAGINAS)
+        for nombre in activos
+        if nombre in SCRAPER_REGISTRY
     ]
 
     resultados = await asyncio.gather(*tareas)

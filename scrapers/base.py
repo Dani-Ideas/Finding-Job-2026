@@ -19,7 +19,6 @@ class BaseScraper(ABC):
         async with async_playwright() as p:
             browser: Browser = await p.chromium.launch(headless=True)
             page: Page = await browser.new_page()
-            # User-agent de Chrome normal para evitar bloqueos basicos
             await page.set_extra_http_headers(
                 {
                     "User-Agent": (
@@ -40,14 +39,14 @@ class BaseScraper(ABC):
         """Implementar en cada subclase."""
         ...
 
-    # --- Utilidades comunes ---
-
     def detectar_modalidad(self, texto: str) -> str:
-        texto = texto.lower()
-        if "remoto" in texto or "home office" in texto or "remote" in texto:
+        t = texto.lower()
+        if "remoto" in t or "home office" in t or "remote" in t or "teletrabajo" in t:
             return "remoto"
-        if "h\u00edbrido" in texto or "hibrido" in texto or "hybrid" in texto:
-            return "hibrido"
-        if "presencial" in texto or "on-site" in texto or "onsite" in texto:
+        if "híbrido" in t or "hibrido" in t or "hybrid" in t:
+            return "híbrido"
+        if "medio tiempo" in t or "part time" in t or "part-time" in t or "medio-tiempo" in t:
+            return "medio tiempo"
+        if "presencial" in t or "on-site" in t or "onsite" in t:
             return "presencial"
         return "no especificado"

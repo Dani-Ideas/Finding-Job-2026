@@ -1,13 +1,37 @@
-# Entorno virtual
 venv/
+.claude/
+CLAUDE.md
 
-# Resultados del scraper (datos personales, cambian cada ejecucion)
+# ── Resultados del scraper ──────────────────────────────────────────────────
+# Datos de terceros + información personal (generados en cada ejecución)
 empleos_*.csv
 
-# Python
+# ── Credenciales y secretos ─────────────────────────────────────────────────
+credentials.enc
+credentials.salt
+.env
+.env.*
+*.key
+*.secret
+secrets/
+
+# ── Plantillas de CV (contienen teléfono y email personal) ──────────────────
+templates/
+
+# ── UI — Next.js ─────────────────────────────────────────────────────────────
+ui/node_modules/
+ui/.next/
+ui/.env
+ui/.env.*
+
+# ── Python ──────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
+*.pyo
 
-# Editor
+# ── Editor ──────────────────────────────────────────────────────────────────
 .vscode/
 .idea/
+*.swp
+
+
